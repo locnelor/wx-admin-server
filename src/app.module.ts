@@ -24,6 +24,7 @@ import { RedisCacheModule } from '@app/redis-cache';
         REDIS_HOST: Joi.string().default("localhost"),
         REDIS_PASSWORD: Joi.string().default(""),
         CACHE_TTL: Joi.number().default(6 * 60 * 60),
+        ADMIN_ACCOUNT: Joi.string(),
         REDIS_DB: Joi.number(),
         WX_APPID: Joi.string(),
         WX_SECRET: Joi.string(),

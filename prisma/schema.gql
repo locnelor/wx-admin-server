@@ -6,6 +6,7 @@ type ProfileEntity {
   id: Int!
   createAt: DateTime!
   updateAt: DateTime!
+  name: String!
 }
 
 """
@@ -20,15 +21,15 @@ type UserEntity {
   loginIp: String
   hash_key: String!
   account: String!
+  wxOpenId: String
   role: Int!
   profileId: Int!
   profile: ProfileEntity
-  name: String!
   token: String
 }
 
 type Query {
-  currentUser: UserEntity!
+  viewer: UserEntity!
 }
 
 type Mutation {

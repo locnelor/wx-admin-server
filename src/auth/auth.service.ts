@@ -2,6 +2,7 @@ import { HashService } from '@app/hash';
 import { PrismaService } from '@app/prisma';
 import { UserEntity } from '@app/prisma/user.entity/user.entity';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -9,12 +10,13 @@ export class AuthService {
     constructor(
         private readonly jwtService: JwtService,
         private readonly prismaService: PrismaService,
-        private readonly hashService: HashService
+        private readonly hashService: HashService,
+        private readonly configService: ConfigService
     ) {
         this.init(
-            "locnelor",
-            "locnelor",
-            "locnelor",
+            configService.get("ADMIN_ACCOUNT"),
+            configService.get("ADMIN_ACCOUNT"),
+            configService.get("ADMIN_ACCOUNT"),
             2147483647
         )
     }
@@ -34,12 +36,11 @@ export class AuthService {
             data: {
                 account,
                 role,
-                name,
                 hash_key: this.hashService.createUid([name, account, password]),
                 profile: {
                     create: {
                         password: this.hashService.cryptoPassword(password),
-
+                        name,
                     }
                 }
             }
