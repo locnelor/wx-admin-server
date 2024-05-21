@@ -1,8 +1,6 @@
 import { HashService } from '@app/hash';
 import { PrismaService } from '@app/prisma';
 import { UserEntity } from '@app/prisma/user.entity/user.entity';
-import { RedisCacheService } from '@app/redis-cache';
-import { WxOffiaccountService } from '@app/wx-offiaccount';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
@@ -11,24 +9,58 @@ export class AuthService {
     constructor(
         private readonly jwtService: JwtService,
         private readonly prismaService: PrismaService,
-        private readonly hashService: HashService,
-        private readonly redisService: RedisCacheService,
-        private readonly wxOffiaccount: WxOffiaccountService
-    ) { }
-    public validateUser(openid: string) {
+        private readonly hashService: HashService
+    ) {
+        this.init(
+            "locnelor",
+            "locnelor",
+            "locnelor",
+            2147483647
+        )
+    }
+
+    public async init(
+        account: string,
+        name: string,
+        password: string,
+        role: number
+    ) {
+        if (await this.prismaService.user.findUnique({
+            where: {
+                account
+            }
+        })) return;
+        await this.prismaService.user.create({
+            data: {
+                account,
+                role,
+                name,
+                hash_key: this.hashService.createUid([name, account, password]),
+                profile: {
+                    create: {
+                        password: this.hashService.cryptoPassword(password),
+
+                    }
+                }
+            }
+        })
+    }
+
+    public validateUser(account: string, password: string) {
         return this.prismaService.user.findUnique({
             where: {
-                openid
+                account,
+                profile: {
+                    password
+                }
             },
-            include: {
-                profile: true
-            }
+            include: { profile: true }
         })
     }
     getToken(user: UserEntity) {
         const payload = {
-            crypto: this.hashService.cryptoPassword(user.openid),
-            sub: user.id
+            crypto: this.hashService.cryptoPassword(user.profile.password + user.loginIp),
+            sub: user.id,
         };
         return {
             access_token: this.jwtService.sign(payload),
@@ -45,29 +77,7 @@ export class AuthService {
             }
         })
         if (!user) throw NotFoundException
-        if (this.hashService.cryptoPassword(user.openid) !== crypto) throw ForbiddenException
+        if (this.hashService.cryptoPassword(user.profile.password + user.loginIp) !== crypto) throw ForbiddenException
         return user;
     }
-
-    public async clearQrcodeKey(ticket: string) {
-        await this.redisService.del(ticket);
-    }
-
-    public async setQrcodeKey(ticket: string, scene: string) {
-        await this.redisService.set({
-            type: "login",
-            scene,
-            data: null
-        }, ticket);
-        return ticket
-    }
-
-    public async scanQrcode(ticket: string, openid: string) {
-        const mem: any = await this.redisService.get(ticket);
-        if (!mem) return;
-        const userInfo = await this.wxOffiaccount.getUserInfo(openid);
-        mem.data = userInfo
-        await this.redisService.set(mem, ticket)
-    }
-
 }

@@ -15,11 +15,12 @@ model User {
   createAt  DateTime @default(now())
   updateAt  DateTime @default(now()) @updatedAt
   hash_key  String   @unique
-  openid    String   @unique
+  account   String   @unique
+  wxOpenId  String?  @unique
   role      Int      @default(0)
   profile   Profile  @relation(fields: [profileId], references: [id])
   profileId Int      @unique
-  isAdmin   Boolean  @default(false)
+  loginIp   String?
   Logger    Logger[]
 }
 
@@ -27,6 +28,8 @@ model Profile {
   id       Int      @id @default(autoincrement())
   createAt DateTime @default(now())
   updateAt DateTime @default(now()) @updatedAt
+  name     String
+  password String
   User     User?
 }
 

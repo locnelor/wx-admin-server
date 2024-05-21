@@ -69,15 +69,6 @@
       "compilerOptions": {
         "tsConfigPath": "libs/utils/tsconfig.lib.json"
       }
-    },
-    "wx-offiaccount": {
-      "type": "library",
-      "root": "libs/wx-offiaccount",
-      "entryFile": "index",
-      "sourceRoot": "libs/wx-offiaccount/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/wx-offiaccount/tsconfig.lib.json"
-      }
     }
   }
 }

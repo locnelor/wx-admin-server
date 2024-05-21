@@ -26,7 +26,6 @@ import { HashModule } from '@app/hash';
       },
       inject: [ConfigService]
     }),
-    RedisCacheModule,
     UserModule
   ],
   providers: [JwtStrategy, AuthService, AuthResolver],

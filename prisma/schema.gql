@@ -17,6 +17,7 @@ type UserEntity {
   id: Int!
   createAt: DateTime!
   updateAt: DateTime!
+  loginIp: String
   hash_key: String!
   account: String!
   role: Int!

@@ -24,8 +24,6 @@
     "@app/request/(.*)": "<rootDir>/../libs/request/src/$1",
     "@app/request": "<rootDir>/../libs/request/src",
     "@app/utils/(.*)": "<rootDir>/../libs/utils/src/$1",
-    "@app/utils": "<rootDir>/../libs/utils/src",
-    "@app/wx-offiaccount/(.*)": "<rootDir>/../libs/wx-offiaccount/src/$1",
-    "@app/wx-offiaccount": "<rootDir>/../libs/wx-offiaccount/src"
+    "@app/utils": "<rootDir>/../libs/utils/src"
   }
 }

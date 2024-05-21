@@ -5,10 +5,14 @@ import { ProfileEntity } from "../profile.entity/profile.entity";
 
 @ObjectType()
 export class UserEntity extends BaseEntity implements User {
-    openid: string;
+    @Field({ nullable: true })
+    loginIp: string;
 
     @Field()
     hash_key: string;
+
+    @Field()
+    account: string;
 
     @Field(() => Int)
     role: number;
@@ -18,6 +22,9 @@ export class UserEntity extends BaseEntity implements User {
 
     @Field(() => ProfileEntity, { nullable: true })
     profile: ProfileEntity
+
+    @Field()
+    name: string;
 
     @Field({ nullable: true })
     token?: string
