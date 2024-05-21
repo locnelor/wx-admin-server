@@ -17,7 +17,7 @@ export class AuthResolver {
 
     @Query(() => UserEntity)
     @UseGuards(GqlAuthGuard)
-    currentUser(
+    viewer(
         @GqlCurrentUser() user: UserEntity
     ) {
         return user;

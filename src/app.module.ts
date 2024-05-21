@@ -59,7 +59,7 @@ import { RedisCacheModule } from '@app/redis-cache';
           req: raw,
           res,
           trackErrors(errors) {
-            console.log(errors)
+            console.log("app.module", errors)
           },
         };
       },
