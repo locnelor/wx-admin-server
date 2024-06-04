@@ -10,18 +10,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Config {
+  id                Int  @id @default(autoincrement())
+  defaultPositionId Int?
+}
+
 model User {
-  id        Int      @id @default(autoincrement())
-  createAt  DateTime @default(now())
-  updateAt  DateTime @default(now()) @updatedAt
-  hash_key  String   @unique
-  account   String   @unique
-  wxOpenId  String?  @unique
-  role      Int      @default(0)
-  profile   Profile  @relation(fields: [profileId], references: [id])
-  profileId Int      @unique
-  loginIp   String?
-  Logger    Logger[]
+  id         Int      @id @default(autoincrement())
+  createAt   DateTime @default(now())
+  updateAt   DateTime @default(now()) @updatedAt
+  hash_key   String   @unique
+  account    String   @unique
+  wxOpenId   String?  @unique
+  role       Int      @default(0)
+  profile    Profile  @relation(fields: [profileId], references: [id])
+  profileId  Int      @unique
+  loginIp    String?
+  Logger     Logger[]
+  position   Position @relation(fields: [positionId], references: [id])
+  positionId Int
 }
 
 model Profile {
@@ -31,6 +38,19 @@ model Profile {
   name     String
   password String
   User     User?
+}
+
+model Position {
+  id       Int      @id @default(autoincrement())
+  createAt DateTime @default(now())
+  updateAt DateTime @default(now()) @updatedAt
+  name     String   @unique
+  User     User[]
+}
+
+model Menu {
+  id   Int    @id @default(autoincrement())
+  name String
 }
 
 model Logger {
@@ -43,6 +63,6 @@ model Logger {
   name     String
   ip       String
   status   Int
-  message  String?
+  message  String?  @db.LongText
   time     Int
 }

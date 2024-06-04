@@ -13,6 +13,7 @@ export class RedisCacheService {
     }
 
     public async set(data: any, key: string, ttl?: number) {
+        // this.cacheManager.store.set
         await this.cacheManager.set(key, data, ttl)
     }
 
